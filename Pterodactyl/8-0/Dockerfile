@@ -42,12 +42,12 @@ RUN if [ ! -f /usr/bin/php ]; then ln -s /usr/bin/php8.0 /usr/bin/php; fi
 # Vérification de la version PHP et création de l'utilisateur container
 RUN php -v && useradd -d /home/container -m container
 
+# Installation de Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+
 USER container
 ENV USER=container HOME=/home/container
 WORKDIR /home/container
-
-# Installation de Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
 COPY ../entrypoint.sh /entrypoint.sh
 CMD [ "/bin/bash", "/entrypoint.sh" ]
