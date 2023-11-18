@@ -1,11 +1,9 @@
-FROM --platform=$TARGETOS/$TARGETARCH amd64/debian
+FROM debian:buster-slim
 
-LABEL author="Gabriel BTD (me_gabi)" maintainer="gabriel.btd@agamicloud.tech"
+LABEL author="Gabriel BTD (le_gabi)"
+LABEL maintainer="gabriel.btd@agamicloud.tech"
 LABEL org.opencontainers.image.source="https://github.com/legabi/containers"
 LABEL org.opencontainers.image.description="A Docker image to run PHP 8.0 on Pterodactyl"
-
-# Linux things
-ARG DEBIAN_FRONTEND=noninteractive
 
 # Mise à jour et installation des dépendances nécessaires pour PHP
 RUN apt-get update && apt-get install -y \
@@ -16,9 +14,11 @@ RUN apt-get update && apt-get install -y \
     lsb-release \
     software-properties-common
 
-# Ajout de la clé GPG et du dépôt de PHP
-RUN curl -fsSL https://packages.sury.org/php/$(lsb_release -sc)/gpg | apt-key add - \
-    && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
+# Téléchargement et ajout de la clé GPG pour le dépôt Sury PHP
+RUN curl https://packages.sury.org/php/apt.gpg -o /etc/apt/trusted.gpg.d/php.gpg
+
+# Ajout du dépôt Sury PHP dans sources.list.d
+RUN echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
 
 # Installation de PHP 8.0 et de ses extensions
 RUN apt-get update && apt-get install -y \
@@ -30,11 +30,11 @@ RUN ln -s /usr/bin/php8.0 /usr/bin/php \
     && php -v \
     && useradd -d /home/container -m container
 
-
 USER container
 ENV USER=container HOME=/home/container
 WORKDIR /home/container
 
+# Installation de Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 COPY ../entrypoint.sh /entrypoint.sh
