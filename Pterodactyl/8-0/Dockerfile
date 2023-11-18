@@ -7,23 +7,29 @@ LABEL org.opencontainers.image.description="A Docker image to run PHP 8.0 on Pte
 # Linux things
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update -y \
-    && apt-get upgrade -y \
-    && apt -y install software-properties-common curl apt-transport-https ca-certificates gnupg \
-    && LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php \
-    && apt-get install -y lsof openssl git tar sqlite3 fontconfig libfreetype6 tzdata iproute2 libstdc++6 locales locales-all font-manager php8.0
+# Mise à jour et installation des dépendances nécessaires pour PHP
+RUN apt-get update && apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release \
+    software-properties-common
 
+# Ajout de la clé GPG et du dépôt de PHP
+RUN curl -fsSL https://packages.sury.org/php/$(lsb_release -sc)/gpg | apt-key add - \
+    && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
 
-# PHP things
-RUN apt-get install -y php8.0-{bcmath,bz2,cgi,cli,common,curl,dev,enchant,fpm,gd,gmp,imap,interbase,intl,json,ldap,mbstring,mysql,odbc,opcache,pgsql,phpdbg,pspell,readline,recode,soap,sodium,sqlite3,sybase,tidy,xml,xmlrpc,xsl,zip}
+# Installation de PHP 8.0 et de ses extensions
+RUN apt-get update && apt-get install -y \
+    php8.0 \
+    php8.0-{bcmath,bz2,cgi,cli,common,curl,dev,enchant,fpm,gd,gmp,imap,interbase,intl,json,ldap,mbstring,mysql,odbc,opcache,pgsql,phpdbg,pspell,readline,recode,soap,sodium,sqlite3,sybase,tidy,xml,xmlrpc,xsl,zip}
 
-# export PATH="$PATH:/usr/bin/php8.0"
-RUN ln -s /usr/bin/php8.0 /usr/bin/php
+# Configuration de PHP et autres étapes de configuration
+RUN ln -s /usr/bin/php8.0 /usr/bin/php \
+    && php -v \
+    && useradd -d /home/container -m container
 
-RUN php -v
-
-# Pterodactyl things
-RUN useradd -d /home/container -m container
 
 USER container
 ENV USER=container HOME=/home/container
