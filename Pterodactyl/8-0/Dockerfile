@@ -9,6 +9,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y \
     && apt-get upgrade -y \
+    && LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php \
     && apt-get install -y lsof curl ca-certificates openssl git tar sqlite3 fontconfig libfreetype6 tzdata iproute2 libstdc++6 locales locales-all font-manager php8.0
 
 
