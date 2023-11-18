@@ -45,6 +45,9 @@ RUN php -v && useradd -d /home/container -m container
 # Installation de Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
+# Changement de l'emplacement des sessions PHP pour /home/container/tmp
+RUN sed -i 's/\/var\/lib\/php\/sessions/\/home\/container\/tmp/g' /etc/php/8.0/fpm/php.ini
+
 USER container
 ENV USER=container HOME=/home/container
 WORKDIR /home/container
