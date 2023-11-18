@@ -36,10 +36,11 @@ RUN apt-get install -y \
     php8.0-curl \
     php8.0-zip
 
-# Configuration de PHP et autres étapes de configuration
-RUN ln -s /usr/bin/php8.0 /usr/bin/php \
-    && php -v \
-    && useradd -d /home/container -m container
+# Création du lien symbolique s'il n'existe pas déjà
+RUN if [ ! -f /usr/bin/php ]; then ln -s /usr/bin/php8.0 /usr/bin/php; fi
+
+# Vérification de la version PHP et création de l'utilisateur container
+RUN php -v && useradd -d /home/container -m container
 
 USER container
 ENV USER=container HOME=/home/container
