@@ -23,9 +23,18 @@ RUN echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc
 # Installation de PHP 8.0
 RUN apt-get update && apt-get install -y php8.0
 
-# Installation des extensions PHP individuellement
+# Installation des extensions PHP spécifiées
 RUN apt-get install -y \
-    php8.0-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip}
+    php8.0-common \
+    php8.0-cli \
+    php8.0-gd \
+    php8.0-mysql \
+    php8.0-mbstring \
+    php8.0-bcmath \
+    php8.0-xml \
+    php8.0-fpm \
+    php8.0-curl \
+    php8.0-zip
 
 # Configuration de PHP et autres étapes de configuration
 RUN ln -s /usr/bin/php8.0 /usr/bin/php \
