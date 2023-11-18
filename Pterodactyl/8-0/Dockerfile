@@ -12,7 +12,12 @@ RUN apt-get update -y \
     && apt-get install -y lsof curl ca-certificates openssl git tar sqlite3 fontconfig libfreetype6 tzdata iproute2 libstdc++6 locales locales-all font-manager php8.0
 
 
-# Check if the installation was successful
+# PHP things
+RUN apt-get install -y php8.0-{bcmath,bz2,cgi,cli,common,curl,dev,enchant,fpm,gd,gmp,imap,interbase,intl,json,ldap,mbstring,mysql,odbc,opcache,pgsql,phpdbg,pspell,readline,recode,soap,sodium,sqlite3,sybase,tidy,xml,xmlrpc,xsl,zip}
+
+# export PATH="$PATH:/usr/bin/php8.0"
+RUN ln -s /usr/bin/php8.0 /usr/bin/php
+
 RUN php -v
 
 # Pterodactyl things
