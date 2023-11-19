@@ -1,6 +1,6 @@
 FROM debian:buster-slim
 
-LABEL author="Gabriel BTD (le_gabi)"
+LABEL author="Gabriel BTD"
 LABEL maintainer="gabriel.btd@agamicloud.tech"
 LABEL org.opencontainers.image.source="https://github.com/legabi/containers"
 LABEL org.opencontainers.image.description="A Docker image to run PHP 8.0 on Pterodactyl"
