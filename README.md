@@ -1,1 +1,2 @@
 # containers
+[![Images for Pterodactyl PHP](https://github.com/legabi/containers/actions/workflows/pterodactyl-php.yml/badge.svg)](https://github.com/legabi/containers/actions/workflows/pterodactyl-php.yml)
