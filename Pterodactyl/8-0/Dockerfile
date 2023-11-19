@@ -34,7 +34,9 @@ RUN apt-get install -y \
     php8.0-xml \
     php8.0-fpm \
     php8.0-curl \
-    php8.0-zip
+    php8.0-zip \
+    php8.0-sqlite3 \
+    php8.0-ldap
 
 # Création du lien symbolique s'il n'existe pas déjà
 RUN if [ ! -f /usr/bin/php ]; then ln -s /usr/bin/php8.0 /usr/bin/php; fi
