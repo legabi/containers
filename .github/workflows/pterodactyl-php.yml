@@ -35,7 +35,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./Pterodactyl
-          file: ./Pterodactyl/${{ matrix.version }}/Dockerfile
+          file: ./Pterodactyl/php/${{ matrix.version }}/Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
