@@ -4,7 +4,7 @@ FROM python:3.10
 LABEL author="Gabriel BTD (le_gabi)"
 LABEL maintainer="gabriel.btd@agamicloud.tech"
 LABEL org.opencontainers.image.source="https://github.com/legabi/containers"
-LABEL org.opencontainers.image.description="A Docker image to AI training"
+LABEL org.opencontainers.image.description="A Docker image to AI training (Python 3.10 X tensorflow X huggingface)"
 
 WORKDIR /app
 
