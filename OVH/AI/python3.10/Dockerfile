@@ -9,6 +9,9 @@ LABEL org.opencontainers.image.description="A Docker image to AI training (Pytho
 
 WORKDIR /app
 
+# install python3.10
+RUN apt-get update && apt-get install -y python3.10 python3-pip
+
 # Copiez le fichier requirements.txt dans le répertoire de travail
 COPY ../requirements.txt /requirements.txt
 COPY ../main.py /main.py
