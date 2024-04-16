@@ -19,6 +19,8 @@ LABEL org.opencontainers.image.description="A Docker image to AI training (Pytho
 
 WORKDIR /app
 
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+
 RUN apt-get -qy update && apt-get install -qy \
     man \
     vim \
