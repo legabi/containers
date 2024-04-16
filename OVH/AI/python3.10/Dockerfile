@@ -1,5 +1,5 @@
 # Utilisez l'image officielle Python 3.10 comme image de base
-FROM python:3.10
+FROM ubuntu:20.04
 
 # RUN 1
 LABEL author="Gabriel BTD (le_gabi)"
@@ -28,6 +28,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Installez les dépendances spécifiées dans requirements.txt
 RUN python3.10 -m pip install --no-cache-dir -r /requirements.txt
 RUN python3.10 -m pip install tensorflow[and-cuda]
+
+# Vérif
 
 # Commande par défaut pour exécuter lorsqu'un conteneur basé sur cette image est démarré
 CMD ["python3.10", "/main.py"]
