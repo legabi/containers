@@ -19,8 +19,8 @@ RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get update && apt-get install -y python3.10 python3.10-dev python3.10-distutils
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 
 RUN wget https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda_11.8.0_520.61.05_linux.run
-RUN sh cuda_11.8.0_520.61.05_linux.ru --silent --toolkit --toolkitpath=/usr/local/cuda-11.8 --override
-RUN rm cuda_11.8.0_520.61.05_linux.ru
+RUN sh cuda_11.8.0_520.61.05_linux.run --silent --toolkit --toolkitpath=/usr/local/cuda-11.8 --override
+RUN rm cuda_11.8.0_520.61.05_linux.run
 
 # Install drivers
 RUN apt-get install -y nvidia-cudnn nvidia-cuda-toolkit
