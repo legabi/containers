@@ -6,10 +6,7 @@ LABEL maintainer="gabriel.btd@agamicloud.tech"
 LABEL org.opencontainers.image.source="https://github.com/legabi/containers"
 LABEL org.opencontainers.image.description="A Docker image to AI training"
 
-# Définissez le répertoire de travail dans le conteneur
-USER container
-ENV USER=container HOME=/home/container
-WORKDIR /home/container
+WORKDIR /app
 
 # Copiez le fichier requirements.txt dans le répertoire de travail
 COPY ../requirements.txt /requirements.txt
