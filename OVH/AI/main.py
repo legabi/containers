@@ -34,7 +34,7 @@ os.environ["HF_DATASETS_OFFLINE"] = "1"
 # # Load datas
 
 # %%
-df = load_dataset('PleIAs/French-PD-Books', split='train[:1100]', cache_dir='caching')
+df = load_dataset('PleIAs/French-PD-Books', split='train[:1100]', cache_dir='/app/caching')
 # {[file_id: str, ocr: int, title: str, complete_text: str, word_count: int, character_count: int]}
 
 # # Prepare df to be {[ask: title, answer: complete_text]}
@@ -81,13 +81,13 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 model.summary()
 
 
-df = load_dataset('PleIAs/French-PD-Books', split='train', cache_dir='caching')
+df = load_dataset('PleIAs/French-PD-Books', split='train', cache_dir='/app/caching')
 
 def data_generator(batch_size):
     while True:
         for i in range(0, len(df), batch_size):
             model.summary()
-            df_batch = load_dataset('PleIAs/French-PD-Books', split=f'train[{i}:{i+batch_size}]', cache_dir='caching')
+            df_batch = load_dataset('PleIAs/French-PD-Books', split=f'train[{i}:{i+batch_size}]', cache_dir='/app/caching')
 
             data = {'inputs': [], 'labels': []}
             for x in df_batch:
