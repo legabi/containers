@@ -25,9 +25,15 @@ Input = tf.keras.layers.Input
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 print(gpus)
-tf.config.set_visible_devices([], 'CPU') # hide the CPU
-tf.config.set_visible_devices(gpus[0], 'GPU') # unhide potentially hidden GPU
-tf.config.get_visible_devices()
+if gpus:
+    tf.config.set_visible_devices([], 'CPU') # hide the CPU
+    tf.config.set_visible_devices(gpus[0], 'GPU') # unhide potentially hidden GPU
+    tf.config.get_visible_devices()
+else: 
+    print("No GPU found")
+    num_proc = os.cpu_count()
+    print(f"Number of processors: {num_proc}")
+    tf.config.threading.set_intra_op_parallelism_threads(num_proc)
 
 os.environ["HF_DATASETS_OFFLINE"] = "1"
 

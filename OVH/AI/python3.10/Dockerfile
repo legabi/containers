@@ -3,6 +3,7 @@ FROM nvidia/cuda:11.3.1-base-ubuntu20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Paris
+ENV TF_ENABLE_ONEDNN_OPTS=1
 
 # RUN 1
 LABEL author="Gabriel BTD (le_gabi)"
@@ -24,7 +25,8 @@ COPY ../main.py /main.py
 
 # Installez les dépendances spécifiées dans requirements.txt
 RUN python3.10 -m pip install --no-cache-dir -r /requirements.txt
-RUN python3.10 -m pip install tensorflow[and-cuda]
+# Nvidia H100
+RUN python3.10 -m pip install tensorflow[and-cuda] tensorflow-gpu tensorflow-tensorrt
 
 # Vérif
 
