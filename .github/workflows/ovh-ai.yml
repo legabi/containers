@@ -44,5 +44,6 @@ jobs:
         run: docker login registry.bhs.ai.cloud.ovh.net -u ${{ secrets.OVH_USERNAME }} -p ${{ secrets.OVH_PASSWORD }}
       - name: Tag and push image to OVH Docker Registry
         run: |
+          docker pull ghcr.io/legabi/containers:ai-training-${{ matrix.version }}
           docker tag ghcr.io/legabi/containers:ai-training-${{ matrix.version }} registry.bhs.ai.cloud.ovh.net/601f2816a04749f3b70a2e31d505054b/ai-training:${{ matrix.version }}
           docker push registry.bhs.ai.cloud.ovh.net/601f2816a04749f3b70a2e31d505054b/ai-training:${{ matrix.version }}
