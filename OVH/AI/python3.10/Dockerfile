@@ -16,7 +16,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y software-properties-common
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get update && apt-get install -y python3.10 python3.10-dev python3.10-distutils
-RUN apt-get install -y python3-pip
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 
 # Copiez le fichier requirements.txt dans le répertoire de travail
 COPY ../requirements.txt /requirements.txt
