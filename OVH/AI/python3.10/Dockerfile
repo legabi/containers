@@ -19,7 +19,12 @@ LABEL org.opencontainers.image.description="A Docker image to AI training (Pytho
 
 WORKDIR /app
 
-RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+RUN apt-key del 7fa2af80
+RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+RUN apt-get -qy update && apt-get install -y wget curl gnupg2
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.0-1_all.deb
+RUN dpkg -i cuda-keyring_1.0-1_all.deb
+RUN rm cuda-keyring_1.0-1_all.deb
 
 RUN apt-get -qy update && apt-get install -qy \
     man \
@@ -58,7 +63,7 @@ COPY ../requirements.txt /requirements.txt
 COPY ../main.py /main.py
 
 # Installez les dépendances spécifiées dans requirements.txt
-RUN python3.10 -m pip install --no-cache-dir -r /requirements.txt
+RUN python -m pip install --no-cache-dir -r /requirements.txt
 # # Nvidia H100
 # RUN python3.10 -m pip uninstall -y tensorflow
 # RUN python3.10 -m pip install tensorflow[and-cuda]
