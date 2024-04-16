@@ -1,5 +1,11 @@
 # Utilisez l'image officielle Python 3.10 comme image de base
-FROM nvidia/cuda:11.3.1-base-ubuntu20.04
+FROM tensorflow/tensorflow:2.4.1-gpu
+
+# Change default shell
+RUN chsh -s /bin/bash
+ENV SHELL=/bin/bash
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Paris
@@ -13,19 +19,37 @@ LABEL org.opencontainers.image.description="A Docker image to AI training (Pytho
 
 WORKDIR /app
 
-# install python3.10
-RUN apt-get update && apt-get install -y software-properties-common curl wget
-RUN add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update && apt-get install -y python3.10 python3.10-dev python3.10-distutils
-RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 
-RUN wget https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda_11.8.0_520.61.05_linux.run
-RUN sh cuda_11.8.0_520.61.05_linux.run --silent --toolkit --toolkitpath=/usr/local/cuda-11.8 --override
-RUN rm cuda_11.8.0_520.61.05_linux.run
+RUN apt-get -qy update && apt-get install -qy \
+    man \
+    vim \
+    nano \
+    htop \
+    curl \
+    wget \
+    rsync \
+    ca-certificates \
+    git \
+    zip \
+    procps \
+    ssh \
+    gettext-base \
+    transmission-cli \
+    && apt-get -qq clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install drivers
-RUN wget https://fr.download.nvidia.com/tesla/550.54.15/NVIDIA-Linux-x86_64-550.54.15.run
-RUN sh NVIDIA-Linux-x86_64-550.54.15.run --silent --no-kernel-module
-RUN rm NVIDIA-Linux-x86_64-550.54.15.run
+# install python3.10
+# RUN apt-get update && apt-get install -y software-properties-common curl wget
+# RUN add-apt-repository ppa:deadsnakes/ppa
+# RUN apt-get update && apt-get install -y python3.10 python3.10-dev python3.10-distutils
+# RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 
+# RUN wget https://developer.download.nvidia.com/compute/cuda/11.8.0/local_installers/cuda_11.8.0_520.61.05_linux.run
+# RUN sh cuda_11.8.0_520.61.05_linux.run --silent --toolkit --toolkitpath=/usr/local/cuda-11.8 --override
+# RUN rm cuda_11.8.0_520.61.05_linux.run
+
+# # Install drivers
+# RUN wget https://fr.download.nvidia.com/tesla/550.54.15/NVIDIA-Linux-x86_64-550.54.15.run
+# RUN sh NVIDIA-Linux-x86_64-550.54.15.run --silent --no-kernel-module
+# RUN rm NVIDIA-Linux-x86_64-550.54.15.run
 
 # Copiez le fichier requirements.txt dans le répertoire de travail
 COPY ../requirements.txt /requirements.txt
@@ -33,11 +57,11 @@ COPY ../main.py /main.py
 
 # Installez les dépendances spécifiées dans requirements.txt
 RUN python3.10 -m pip install --no-cache-dir -r /requirements.txt
-# Nvidia H100
-RUN python3.10 -m pip uninstall -y tensorflow
-RUN python3.10 -m pip install tensorflow[and-cuda]
+# # Nvidia H100
+# RUN python3.10 -m pip uninstall -y tensorflow
+# RUN python3.10 -m pip install tensorflow[and-cuda]
 
 # Vérif
 
 # Commande par défaut pour exécuter lorsqu'un conteneur basé sur cette image est démarré
-CMD ["python3.10", "/main.py"]
+CMD ["python", "/main.py"]
