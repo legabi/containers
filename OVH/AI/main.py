@@ -23,10 +23,11 @@ MaxPooling1D = tf.keras.layers.MaxPooling1D
 BatchNormalization = tf.keras.layers.BatchNormalization
 Input = tf.keras.layers.Input
 
-num_cores = 40
-
-# optimize for cpu & multi-core
-tf.config.threading.set_intra_op_parallelism_threads(num_cores)
+gpus = tf.config.experimental.list_physical_devices('GPU')
+print(gpus)
+tf.config.set_visible_devices([], 'CPU') # hide the CPU
+tf.config.set_visible_devices(gpus[0], 'GPU') # unhide potentially hidden GPU
+tf.config.get_visible_devices()
 
 os.environ["HF_DATASETS_OFFLINE"] = "1"
 
