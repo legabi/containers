@@ -17,7 +17,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y software-properties-common curl
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt-get update && apt-get install -y python3.10 python3.10-dev python3.10-distutils
-RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10 
 
 # Copiez le fichier requirements.txt dans le répertoire de travail
 COPY ../requirements.txt /requirements.txt
@@ -26,6 +26,7 @@ COPY ../main.py /main.py
 # Installez les dépendances spécifiées dans requirements.txt
 RUN python3.10 -m pip install --no-cache-dir -r /requirements.txt
 # Nvidia H100
+RUN python3.10 -m pip uninstall -y tensorflow
 RUN python3.10 -m pip install tensorflow[and-cuda]
 
 # Vérif
