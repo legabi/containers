@@ -13,8 +13,21 @@ WORKDIR /app
 COPY ../requirements.txt /requirements.txt
 COPY ../main.py /main.py
 
+# INSTALL CUDA DRIVER
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gnupg2 \
+    curl \
+    ca-certificates \
+    && curl -fsSL https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub | apt-key add - \
+    && echo "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64 /" > /etc/apt/sources.list.d/cuda.list \
+    && apt-get update && apt-get install -y --no-install-recommends \
+    cuda-drivers \
+    && apt-mark hold cuda-drivers \
+    && rm -rf /var/lib/apt/lists/*
+
 # Installez les dépendances spécifiées dans requirements.txt
 RUN python3.10 -m pip install --no-cache-dir -r /requirements.txt
+RUN python3.10 -m pip install tensorflow[and-cuda]
 
 # Commande par défaut pour exécuter lorsqu'un conteneur basé sur cette image est démarré
 CMD ["python3.10", "/main.py"]
