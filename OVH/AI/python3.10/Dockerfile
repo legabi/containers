@@ -26,7 +26,8 @@ COPY ../main.py /main.py
 # Installez les dépendances spécifiées dans requirements.txt
 RUN python3.10 -m pip install --no-cache-dir -r /requirements.txt
 # Nvidia H100
-RUN python3.10 -m pip install tensorflow[and-cuda] tensorflow-gpu tensorflow-tensorrt
+RUN python3.10 -m pip uninstall -y tensorflow
+RUN python3.10 -m pip install tensorflow-gpu tensorflow-tensorrt
 
 # Vérif
 
