@@ -23,7 +23,6 @@ RUN sh cuda_11.8.0_520.61.05_linux.run --silent --toolkit --toolkitpath=/usr/loc
 RUN rm cuda_11.8.0_520.61.05_linux.run
 
 # Install drivers
-RUN apt-get install -y nvidia-cudnn nvidia-cuda-toolkit
 RUN wget https://fr.download.nvidia.com/tesla/550.54.15/NVIDIA-Linux-x86_64-550.54.15.run
 RUN sh NVIDIA-Linux-x86_64-550.54.15.run --silent --no-kernel-module
 RUN rm NVIDIA-Linux-x86_64-550.54.15.run
