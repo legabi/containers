@@ -9,7 +9,6 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Paris
-ENV TF_ENABLE_ONEDNN_OPTS=1
 
 # RUN 1
 LABEL author="Gabriel BTD (le_gabi)"

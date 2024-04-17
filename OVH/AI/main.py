@@ -95,7 +95,6 @@ df = load_dataset('PleIAs/French-PD-Books', split='train')
 def data_generator(batch_size):
     while True:
         for i in range(0, len(df), batch_size):
-            model.summary()
             df_batch = load_dataset('PleIAs/French-PD-Books', split=f'train[{i}:{i+batch_size}]')
 
             data = {'inputs': [], 'labels': []}
@@ -120,7 +119,7 @@ def data_generator(batch_size):
                 yield inputs, labels
 
 # Use the data generator for model training
-batch_size = 200
+batch_size = 500
 model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epochs=3, verbose=1)
 
 
