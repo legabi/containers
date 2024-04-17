@@ -130,14 +130,14 @@ model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epo
 # Train the model
 
 # Save the model
-model.save('model.h5')
+model.save('output/model.h5')
 
 # Save the tokenizer
-with open('tokenizer.pkl', 'wb') as f:
+with open('output/tokenizer.pkl', 'wb') as f:
     pickle.dump(tokenizer, f)
 
 plot_model(model, 
-           to_file='model.png', 
+           to_file='output/model.png', 
            show_shapes=True, 
            show_layer_names=True,
            show_layer_activations=True)
