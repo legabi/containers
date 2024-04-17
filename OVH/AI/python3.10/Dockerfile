@@ -1,5 +1,5 @@
 # Utilisez l'image officielle Python 3.10 comme image de base
-FROM tensorflow/tensorflow:2.4.1-gpu
+FROM tensorflow/tensorflow:latest-gpu-py3
 
 # Change default shell
 RUN chsh -s /bin/bash
@@ -71,4 +71,4 @@ RUN python -m pip install --no-cache-dir -r /requirements.txt
 # Vérif
 
 # Commande par défaut pour exécuter lorsqu'un conteneur basé sur cette image est démarré
-CMD ["python", "/main.py"]
+CMD ["python3", "/main.py"]
