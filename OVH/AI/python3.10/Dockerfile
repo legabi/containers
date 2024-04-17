@@ -1,5 +1,5 @@
 # Utilisez l'image officielle Python 3.10 comme image de base
-FROM tensorflow/tensorflow:latest-gpu-py3
+FROM tensorflow/tensorflow:latest-gpu
 
 # Change default shell
 RUN chsh -s /bin/bash
