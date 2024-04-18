@@ -86,7 +86,7 @@ model.add(LSTM(lstm_units, return_sequences=False, dropout=dropout_rate, recurre
 model.add(Dense(dense_units, activation='relu'))
 model.add(Dropout(dropout_rate))
 model.add(Dense(dense_units, activation='relu'))
-model.add(Dense(len(tokenizer.word_index)+1, activation='softmax'))
+model.add(Dense(512, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 model.summary()
 
@@ -117,7 +117,7 @@ def data_generator(batch_size):
                 data['inputs'].append(tokenizer.texts_to_sequences([x['title']])[0])
                 data["labels"].append(tokenizer.texts_to_sequences([x['complete_text']])[0])
 
-            seq_len = max([len(x) for x in data['inputs']])
+            seq_len = 500
             data['inputs'] = pad_sequences(data['inputs'], padding='post', maxlen=seq_len)
             data['labels'] = pad_sequences(data['labels'], padding='post', maxlen=seq_len)
 
