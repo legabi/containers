@@ -16,7 +16,7 @@ LABEL maintainer="gabriel.btd@agamicloud.tech"
 LABEL org.opencontainers.image.source="https://github.com/legabi/containers"
 LABEL org.opencontainers.image.description="A Docker image to AI training (Python 3.10 X tensorflow X huggingface)"
 
-WORKDIR /app
+WORKDIR /workspace
 
 RUN apt-key del 7fa2af80
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
