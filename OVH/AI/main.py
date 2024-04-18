@@ -117,7 +117,7 @@ def data_generator(batch_size):
                 data['inputs'].append(tokenizer.texts_to_sequences([x['title']])[0])
                 data["labels"].append(tokenizer.texts_to_sequences([x['complete_text']])[0])
 
-            seq_len = 500
+            seq_len = 512
             data['inputs'] = pad_sequences(data['inputs'], padding='post', maxlen=seq_len)
             data['labels'] = pad_sequences(data['labels'], padding='post', maxlen=seq_len)
 
