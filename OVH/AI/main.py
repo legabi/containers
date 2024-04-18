@@ -7,6 +7,16 @@ import os
 import pickle
 from tensorflow.keras.callbacks import Callback
 
+# test if i can write in output, else exit
+if not os.path.exists('output'):
+    os.makedirs('output')
+with open('output/test.txt', 'w') as f:
+    try:
+        f.write('test')
+    except:
+        print('Cannot write in output')
+        exit()
+
 Tokenizer = tf.keras.preprocessing.text.Tokenizer
 pad_sequences = tf.keras.preprocessing.sequence.pad_sequences
 Sequential = tf.keras.models.Sequential
