@@ -110,7 +110,7 @@ class CustomModelCheckpoint(Callback):
     def on_batch_end(self, batch, logs=None):
         self.batch_counter += 1
         if self.batch_counter % self.save_freq == 0:
-            self.model.save(f'output/model_at_batch_{self.batch_counter}.h5')
+            self.model.save(f'output/model_at_batch_{self.batch_counter}.keras')
 
 # Instantiate the custom callback
 custom_checkpoint = CustomModelCheckpoint(save_freq=100)
@@ -156,7 +156,7 @@ model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epo
 # Train the model
 
 # Save the model
-model.save('output/model.h5')
+model.save('output/model.keras')
 
 # Save the tokenizer
 with open('output/tokenizer.pkl', 'wb') as f:
