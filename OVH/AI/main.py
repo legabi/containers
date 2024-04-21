@@ -155,15 +155,6 @@ model.save('output/model.keras')
 with open('output/tokenizer.pkl', 'wb') as f:
     pickle.dump(tokenizer, f)
 
-# Test the model
-def predict(text, optimal_length=1000):
-    text = tokenizer.texts_to_sequences([text])
-    text = pad_sequences(text, padding='post')
-    text = model.predict(text)
-    text = np.argmax(text, axis=-1)
-    text = tokenizer.sequences_to_texts(text)
-    text = ' '.join(text)
-    return text[:optimal_length]
-
-# Generate an history
-print(predict("Genere moi une histoire qui parle de : La guerre des mondes"))
+print('Model and tokenizer saved')
+print('Done')
+model.summary()
