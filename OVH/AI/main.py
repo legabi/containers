@@ -72,32 +72,25 @@ tokenizer.fit_on_texts(df['complete_text'])
 
 # Create the model
 
-embedding_size = 64  # Increase this
-lstm_units = 4096  # Increase this
-gru_units = 2048  # Increase this
-dropout_rate = 0.2
-dense_units = 2048  # Increase this
+# embedding_size = 64  # Increase this
+# lstm_units = 4096  # Increase this
+# gru_units = 2048  # Increase this
+# dropout_rate = 0.2
+# dense_units = 2048  # Increase this
 
 # Create the model
-model = Sequential()
-model.add(Embedding(len(tokenizer.word_index)+1, embedding_size))
-model.add(Conv1D(256, 5, activation='relu'))  # Increase the number of filters
-model.add(MaxPooling1D(5))
-model.add(Bidirectional(LSTM(lstm_units, return_sequences=True, dropout=dropout_rate, recurrent_dropout=dropout_rate)))
-model.add(GRU(gru_units, return_sequences=True, dropout=dropout_rate, recurrent_dropout=dropout_rate))
-model.add(BatchNormalization())
-model.add(LSTM(lstm_units, return_sequences=True, dropout=dropout_rate, recurrent_dropout=dropout_rate))
-model.add(LSTM(lstm_units, return_sequences=True, dropout=dropout_rate, recurrent_dropout=dropout_rate))
-model.add(LSTM(lstm_units, return_sequences=True, dropout=dropout_rate, recurrent_dropout=dropout_rate))
-model.add(LSTM(lstm_units, return_sequences=True, dropout=dropout_rate, recurrent_dropout=dropout_rate))
-model.add(LSTM(lstm_units, return_sequences=True, dropout=dropout_rate, recurrent_dropout=dropout_rate))
-model.add(LSTM(lstm_units, return_sequences=True, dropout=dropout_rate, recurrent_dropout=dropout_rate))
-model.add(LSTM(lstm_units, return_sequences=False, dropout=dropout_rate, recurrent_dropout=dropout_rate))
-model.add(Dense(dense_units, activation='relu'))
-model.add(Dropout(dropout_rate))
-model.add(Dense(dense_units, activation='relu'))
-model.add(Dense(512, activation='softmax'))
-model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+vocab_size = 1000000
+embedding_dim = 512
+lstm_units = 4096
+
+model = Sequential([
+    Embedding(vocab_size, embedding_dim),
+    LSTM(lstm_units, return_sequences=True),
+    LSTM(lstm_units, return_sequences=True),
+    TimeDistributed(Dense(vocab_size, activation='softmax'))
+])
+model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
 model.summary()
 
 
@@ -120,6 +113,7 @@ df = load_dataset('PleIAs/French-PD-Books', split='train')
 def data_generator(batch_size):
     while True:
         for i in range(0, len(df), batch_size):
+            model.summary()
             df_batch = load_dataset('PleIAs/French-PD-Books', split=f'train[{i}:{i+batch_size}]')
 
             data = {'inputs': [], 'labels': []}
@@ -127,9 +121,8 @@ def data_generator(batch_size):
                 data['inputs'].append(tokenizer.texts_to_sequences([x['title']])[0])
                 data["labels"].append(tokenizer.texts_to_sequences([x['complete_text']])[0])
 
-            seq_len = 512
-            data['inputs'] = pad_sequences(data['inputs'], padding='post', maxlen=seq_len)
-            data['labels'] = pad_sequences(data['labels'], padding='post', maxlen=seq_len)
+            data['inputs'] = pad_sequences(data['inputs'], padding='post', maxlen=vocab_size)
+            data['labels'] = pad_sequences(data['labels'], padding='post', maxlen=vocab_size)
 
             ds = Dataset.from_dict(data)
 
@@ -161,12 +154,6 @@ model.save('output/model.keras')
 # Save the tokenizer
 with open('output/tokenizer.pkl', 'wb') as f:
     pickle.dump(tokenizer, f)
-
-plot_model(model, 
-           to_file='output/model.png', 
-           show_shapes=True, 
-           show_layer_names=True,
-           show_layer_activations=True)
 
 # Test the model
 def predict(text, optimal_length=1000):
