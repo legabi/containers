@@ -1,11 +1,14 @@
 import numpy as np
 import tensorflow as tf
 from datasets import load_dataset, Dataset;
+from transformers import BertTokenizer
 from keras.utils import to_categorical
 from tensorflow.keras.utils import plot_model
 import os
 import pickle
 from tensorflow.keras.callbacks import Callback
+import tqdm
+
 
 # test if i can write in output, else exit
 if not os.path.exists('output'):
@@ -17,22 +20,14 @@ with open('output/test.txt', 'w') as f:
         print('Cannot write in output')
         exit()
 
-Tokenizer = tf.keras.preprocessing.text.Tokenizer
 pad_sequences = tf.keras.preprocessing.sequence.pad_sequences
 Sequential = tf.keras.models.Sequential
 Embedding = tf.keras.layers.Embedding
-SimpleRNN = tf.keras.layers.SimpleRNN
 Dense = tf.keras.layers.Dense
 TimeDistributed = tf.keras.layers.TimeDistributed
-Bidirectional = tf.keras.layers.Bidirectional
-GRU = tf.keras.layers.GRU
-Attention = tf.keras.layers.Attention
 LSTM = tf.keras.layers.LSTM
 Dropout = tf.keras.layers.Dropout
-Conv1D = tf.keras.layers.Conv1D
-MaxPooling1D = tf.keras.layers.MaxPooling1D
 BatchNormalization = tf.keras.layers.BatchNormalization
-Input = tf.keras.layers.Input
 
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
@@ -63,12 +58,7 @@ df = load_dataset('PleIAs/French-PD-Books', split='train[:1100]')
 print(df['title'][0])
 # %% [markdown]
 # # Create model
-
-# %%
-# Create the model
-tokenizer = Tokenizer(char_level=True, lower=True)
-tokenizer.fit_on_texts(df['title'])
-tokenizer.fit_on_texts(df['complete_text'])
+tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 # Create the model
 
@@ -79,20 +69,23 @@ tokenizer.fit_on_texts(df['complete_text'])
 # dense_units = 2048  # Increase this
 
 # Create the model
-vocab_size = 1000000
-embedding_dim = 512
+vocab_size = tokenizer.vocab_size
+embedding_dim = 4096
 lstm_units = 4096
 
-model = Sequential([
-    Embedding(vocab_size, embedding_dim),
-    LSTM(lstm_units, return_sequences=True),
-    LSTM(lstm_units, return_sequences=True),
-    TimeDistributed(Dense(vocab_size, activation='softmax'))
-])
-model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model = Sequential()
+model.add(Embedding(vocab_size, embedding_dim))
+model.add(LSTM(lstm_units, return_sequences=True))
+model.add(LSTM(lstm_units))
+model.add(Dropout(0.2))
+for _ in range(32):
+    model.add(Dense(4096, activation='relu'))
+model.add(Dense(vocab_size, activation='softmax'))
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 model.summary()
 
+print(f'The model has {sum(p.numel() for p in model.trainable_variables)} parameters')
 
 class CustomModelCheckpoint(Callback):
     def __init__(self, save_freq):
@@ -118,11 +111,13 @@ def data_generator(batch_size):
 
             data = {'inputs': [], 'labels': []}
             for x in df_batch:
-                data['inputs'].append(tokenizer.texts_to_sequences([x['title']])[0])
-                data["labels"].append(tokenizer.texts_to_sequences([x['complete_text']])[0])
+                inputs = tokenizer.encode(x['title'], return_tensors='tf', truncation=True, padding='max_length', max_length=vocab_size)
+                labels = tokenizer.encode(x['complete_text'], return_tensors='tf', truncation=True, padding='max_length', max_length=vocab_size)
+                data['inputs'].append(inputs)
+                data['labels'].append(labels)
 
-            data['inputs'] = pad_sequences(data['inputs'], padding='post', maxlen=vocab_size)
-            data['labels'] = pad_sequences(data['labels'], padding='post', maxlen=vocab_size)
+            data['inputs'] = tf.concat(data['inputs'], axis=0)
+            data['labels'] = tf.concat(data['labels'], axis=0)
 
             ds = Dataset.from_dict(data)
 
@@ -155,6 +150,15 @@ model.save('output/model.keras')
 with open('output/tokenizer.pkl', 'wb') as f:
     pickle.dump(tokenizer, f)
 
-print('Model and tokenizer saved')
-print('Done')
-model.summary()
+# Test the model
+def predict(text, optimal_length=1000):
+    text = tokenizer.texts_to_sequences([text])
+    text = pad_sequences(text, padding='post')
+    text = model.predict(text)
+    text = np.argmax(text, axis=-1)
+    text = tokenizer.sequences_to_texts(text)
+    text = ' '.join(text)
+    return text[:optimal_length]
+
+# Generate an history
+print(predict("Genere moi une histoire qui parle de : La guerre des mondes"))

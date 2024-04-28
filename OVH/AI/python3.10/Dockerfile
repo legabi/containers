@@ -62,7 +62,8 @@ COPY ../requirements.txt /requirements.txt
 COPY ../main.py /main.py
 
 # Installez les dépendances spécifiées dans requirements.txt
-RUN python -m pip install --no-cache-dir -r /requirements.txt
+RUN python3 -m pip install --no-cache-dir -r /requirements.txt
+RUN python3 -m pip install transformers
 # # Nvidia H100
 # RUN python3.10 -m pip uninstall -y tensorflow
 # RUN python3.10 -m pip install tensorflow[and-cuda]
