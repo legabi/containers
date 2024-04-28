@@ -132,7 +132,7 @@ def data_generator(batch_size):
                 yield inputs, labels
 
 # Use the data generator for model training
-batch_size = 200
+batch_size = 100
 # model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epochs=3, verbose=1)
 model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epochs=3, callbacks=[custom_checkpoint])
 
