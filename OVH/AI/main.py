@@ -70,17 +70,17 @@ tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 # Create the model
 vocab_size = tokenizer.vocab_size
-embedding_dim = 4096
+embedding_dim = 128
 lstm_units = 4096
 
 model = Sequential()
 model.add(Embedding(vocab_size, embedding_dim))
 model.add(LSTM(lstm_units, return_sequences=True))
 model.add(LSTM(lstm_units))
-model.add(Dropout(0.2))
 for _ in range(32):
     model.add(Dense(4096, activation='relu'))
-model.add(Dense(vocab_size, activation='softmax'))
+    model.add(Dropout(0.2))
+model.add(Dense(512, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 model.summary()
@@ -111,8 +111,8 @@ def data_generator(batch_size):
 
             data = {'inputs': [], 'labels': []}
             for x in df_batch:
-                inputs = tokenizer.encode(x['title'], return_tensors='tf', truncation=True, padding='max_length', max_length=vocab_size)
-                labels = tokenizer.encode(x['complete_text'], return_tensors='tf', truncation=True, padding='max_length', max_length=vocab_size)
+                inputs = tokenizer.encode(x['title'], return_tensors='tf', truncation=True, padding='max_length', max_length=512)
+                labels = tokenizer.encode(x['complete_text'], return_tensors='tf', truncation=True, padding='max_length', max_length=512)
                 data['inputs'].append(inputs)
                 data['labels'].append(labels)
 
