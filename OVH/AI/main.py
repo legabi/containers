@@ -59,7 +59,7 @@ os.environ["HF_DATASETS_OFFLINE"] = "1"
 # # Load datas
 
 # %%
-df = load_dataset('PleIAs/French-PD-Books', split='train[:1100]')
+# df = load_dataset('PleIAs/French-PD-Books', split='train[:1100]')
 # {[file_id: str, ocr: int, title: str, complete_text: str, word_count: int, character_count: int]}
 
 # # Prepare df to be {[ask: title, answer: complete_text]}
@@ -81,13 +81,13 @@ tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 # Create the model
 vocab_size = tokenizer.vocab_size
 embedding_dim = 128
-lstm_units = 4096
 
 model = Sequential()
 model.add(Embedding(vocab_size, embedding_dim))
 for _ in range(32):
-    model.add(LSTM(lstm_units, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))
-    model.add(TimeDistributed(Dense(lstm_units, activation='relu')))
+    model.add(LSTM(4096, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))
+    model.add(Dense(4096, activation='relu'))
+    model.add(Dropout(0.2))
     model.add(BatchNormalization())
 model.add(TimeDistributed(Dense(vocab_size, activation='softmax')))
 model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
@@ -95,7 +95,7 @@ model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['ac
 model.summary()
 
 # # build model
-model.build(input_shape=(None, 512))
+model.build(input_shape=(None, 128))
 model.summary()
 
 # plot_model(model, to_file='output/model.png', show_shapes=True)
@@ -150,8 +150,8 @@ def data_generator(batch_size):
 
             data = {'inputs': [], 'labels': []}
             for x in df_batch:
-                inputs = tokenizer.encode(x['title'], return_tensors='tf', truncation=True, padding='max_length', max_length=512, add_special_tokens=True)
-                labels = tokenizer.encode(x['complete_text'], return_tensors='tf', truncation=True, padding='max_length', max_length=512, add_special_tokens=True)
+                inputs = tokenizer.encode(x['title'], return_tensors='tf', truncation=True, padding='max_length', max_length=128, add_special_tokens=True)
+                labels = tokenizer.encode(x['complete_text'], return_tensors='tf', truncation=True, padding='max_length', max_length=128, add_special_tokens=True)
                 data['inputs'].append(inputs)
                 data['labels'].append(to_categorical(labels, num_classes=vocab_size))
 
