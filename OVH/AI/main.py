@@ -117,8 +117,8 @@ custom_checkpoint = CustomModelCheckpoint(save_freq=100)
 df = load_dataset('PleIAs/French-PD-Books', split='train')
 
 def process_batch(batch):
-    titles = [f"<|user|>{x['title']}<|bot|>" for x in batch]
-    complete_texts = [f"{x['complete_text']}<|end|>" for x in batch]
+    titles = [f"<|user|>{x['title']}<|bot|>" for x in batch['title']]
+    complete_texts = [f"{x['complete_text']}<|end|>" for x in batch['complete_text']]
     return {'title': titles, 'complete_text': complete_texts}
 
 def data_generator(batch_size):
