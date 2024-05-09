@@ -122,11 +122,7 @@ def data_generator(batch_size):
             model.summary()
             df_batch = load_dataset('PleIAs/French-PD-Books', split=f'train[{i}:{i+batch_size}]')
 
-            # add <|user|> and <|bot|> and <|end|> tokens
-            # df_batch = df_batch.map(lambda x: {'title': f"<|user|>{x['title']}<|bot|>", 'complete_text': f"{x['complete_text']}<|end|>"})
-            df_batch = df_batch.map(lambda x: {'title': f"<|user|>{x['title']}<|bot|>", 'complete_text': f"{x['complete_text']}<|end|>"}, 
-            num_proc=os.cpu_count(), 
-            batched=True)
+            df_batch = df_batch.map(lambda x: {'title': f"<|user|>{x['title']}<|bot|>", 'complete_text': f"{x['complete_text']}<|end|>"}, batched=True, num_proc=os.cpu_count())
 
             print("Batching...")
 
