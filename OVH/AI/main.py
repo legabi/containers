@@ -101,7 +101,7 @@ model.summary()
 # plot_model(model, to_file='output/model.png', show_shapes=True)
 
 class CustomCallback(Callback):
-    def __init__(self, batch_interval=100):
+    def __init__(self, batch_interval=300):
         self.batch_interval = batch_interval
         self.batch_data = {'loss': [], 'accuracy': []}
 
@@ -119,7 +119,7 @@ class CustomCallback(Callback):
         plt.savefig(f'output/training_history_epoch_{epoch}.png')
         plt.close()
 
-custom_callback = CustomCallback(batch_interval=100)
+custom_callback = CustomCallback(batch_interval=300)
 
 class CustomModelCheckpoint(Callback):
     def __init__(self, save_freq):
@@ -133,7 +133,7 @@ class CustomModelCheckpoint(Callback):
             self.model.save(f'output/model_at_batch_{self.batch_counter}.keras')
 
 # Instantiate the custom callback
-custom_checkpoint = CustomModelCheckpoint(save_freq=100)
+custom_checkpoint = CustomModelCheckpoint(save_freq=300)
 
 df = load_dataset('PleIAs/French-PD-Books', split='train')
 
