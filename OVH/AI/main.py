@@ -137,18 +137,14 @@ custom_checkpoint = CustomModelCheckpoint(save_freq=100)
 
 df = load_dataset('PleIAs/French-PD-Books', split='train')
 
-def process_batch(batch):
-    titles = [f"<|user|>{x['title']}<|bot|>" for x in batch['title']]
-    complete_texts = [f"{x['complete_text']}<|end|>" for x in batch['complete_text']]
-    return {'title': titles, 'complete_text': complete_texts}
-
 def data_generator(batch_size):
     while True:
         for i in range(0, len(df), batch_size):
             model.summary()
             df_batch = load_dataset('PleIAs/French-PD-Books', split=f'train[{i}:{i+batch_size}]')
 
-            df_batch = df_batch.map(process_batch, batched=True, num_proc=os.cpu_count())
+            # add user: and bot: and <|endoftext|> tokens
+            df_batch = df_batch.map(lambda x: {'title': f"user: {x['title']} bot: ", 'complete_text': f"{x['complete_text']} <|endoftext|>"})
 
             print("Batching...")
 
