@@ -86,9 +86,8 @@ lstm_units = 4096
 model = Sequential()
 model.add(Embedding(vocab_size, embedding_dim))
 for _ in range(32):
-    model.add(LSTM(lstm_units, return_sequences=True))
+    model.add(LSTM(lstm_units, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))
     model.add(TimeDistributed(Dense(lstm_units, activation='relu')))
-    model.add(Dropout(0.2))
     model.add(BatchNormalization())
 model.add(TimeDistributed(Dense(vocab_size, activation='softmax')))
 model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
@@ -96,8 +95,8 @@ model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['ac
 model.summary()
 
 # # build model
-# model.build(input_shape=(None, 512))
-# model.summary()
+model.build(input_shape=(None, 512))
+model.summary()
 
 # plot_model(model, to_file='output/model.png', show_shapes=True)
 
@@ -172,7 +171,7 @@ def data_generator(batch_size):
                 yield inputs, labels
 
 # Use the data generator for model training
-batch_size = 50
+batch_size = 20
 # model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epochs=3, verbose=1)
 history = model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epochs=3, callbacks=[custom_checkpoint])
 
@@ -190,7 +189,7 @@ plt.savefig('output/training_history.png')
 # %%
 # Train the model
 
-model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
+# model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
 model.summary()
 
 # Save the model
