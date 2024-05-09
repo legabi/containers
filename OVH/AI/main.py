@@ -100,6 +100,27 @@ model.summary()
 
 # plot_model(model, to_file='output/model.png', show_shapes=True)
 
+class CustomCallback(Callback):
+    def __init__(self, batch_interval=100):
+        self.batch_interval = batch_interval
+        self.batch_data = {'loss': [], 'accuracy': []}
+
+    def on_batch_end(self, batch, logs=None):
+        if batch % self.batch_interval == 0:
+            self.batch_data['loss'].append(logs.get('loss'))
+            self.batch_data['accuracy'].append(logs.get('accuracy'))
+
+    def on_epoch_end(self, epoch, logs=None):
+        plt.plot(self.batch_data['accuracy'])
+        plt.plot(self.batch_data['loss'])
+        plt.title('Model Training History')
+        plt.xlabel('Batch')
+        plt.legend(['Accuracy', 'Loss'], loc='upper left')
+        plt.savefig(f'output/training_history_epoch_{epoch}.png')
+        plt.close()
+
+custom_callback = CustomCallback(batch_interval=100)
+
 class CustomModelCheckpoint(Callback):
     def __init__(self, save_freq):
         super(CustomModelCheckpoint, self).__init__()
@@ -177,6 +198,12 @@ model.summary()
 
 # Save the model
 model.save('output/model.keras')
+
+
+# delete all training_history_epoch_*.png
+for file in os.listdir('output'):
+    if file.startswith('training_history_epoch_') and file.endswith('.png'):
+        os.remove(f'output/{file}')
 
 # Save the tokenizer
 with open('output/tokenizer.pkl', 'wb') as f:
