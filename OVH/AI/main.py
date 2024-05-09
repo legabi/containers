@@ -1,10 +1,11 @@
 import numpy as np
+import os
+os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
 import tensorflow as tf
 from datasets import load_dataset, Dataset;
 from transformers import BertTokenizer
 from keras.utils import to_categorical
 from tensorflow.keras.utils import plot_model
-import os
 import pickle
 from tensorflow.keras.callbacks import Callback
 from tqdm import tqdm
