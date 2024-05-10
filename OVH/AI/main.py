@@ -80,10 +80,9 @@ tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 
 # Create the model
 vocab_size = tokenizer.vocab_size
-embedding_dim = 128
 
 model = Sequential()
-model.add(Embedding(vocab_size, embedding_dim))
+model.add(Embedding(vocab_size, 128))
 for _ in range(32):
     model.add(LSTM(4096, return_sequences=True, dropout=0.2, recurrent_dropout=0.2))
     model.add(Dense(4096, activation='relu'))
@@ -144,7 +143,7 @@ def data_generator(batch_size):
             df_batch = load_dataset('PleIAs/French-PD-Books', split=f'train[{i}:{i+batch_size}]')
 
             # add user: and bot: and <|endoftext|> tokens
-            df_batch = df_batch.map(lambda x: {'title': f"user: {x['title']} bot: ", 'complete_text': f"{x['complete_text']} <|endoftext|>"}, num_proc=os.cpu_count(), batched=True)
+            df_batch = df_batch.map(lambda x: {'title': f"user: {x['title']} bot: ", 'complete_text': f"{x['complete_text']} <|endoftext|>"}, num_proc=os.cpu_count())
 
             print("Batching...")
 
