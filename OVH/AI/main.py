@@ -95,8 +95,8 @@ model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['ac
 model.summary()
 
 # # build model
-model.build(input_shape=(None, 128))
-model.summary()
+# model.build(input_shape=(None, 128))
+# model.summary()
 
 # plot_model(model, to_file='output/model.png', show_shapes=True)
 
