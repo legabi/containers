@@ -65,7 +65,7 @@ os.environ["HF_DATASETS_OFFLINE"] = "1"
 # # Prepare df to be {[ask: title, answer: complete_text]}
 # df = df.map(lambda x: {'ask': "Genere moi une histoire qui parle de :" + x['title'], 'answer': x['complete_text']})
 # df = df.filter(lambda x: x['ask'] != None and x['answer'] != None)
-print(df['title'][0])
+# print(df['title'][0])
 # %% [markdown]
 # # Create model
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
@@ -173,7 +173,17 @@ def data_generator(batch_size):
 # Use the data generator for model training
 batch_size = 20
 # model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epochs=3, verbose=1)
-history = model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epochs=3, callbacks=[custom_checkpoint])
+
+# history = model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epochs=3, callbacks=[custom_checkpoint])
+# do it with sessions
+# history = model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epochs=3, callbacks=[custom_callback, custom_checkpoint])
+
+config = tf.compat.v1.ConfigProto()
+config.gpu_options.allow_growth = True
+# config.gpu_options.per_process_gpu_memory_fraction = 0.4
+
+with tf.compat.v1.Session(config=config) as sess:
+    history = model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epochs=3, callbacks=[custom_callback, custom_checkpoint])
 
 plt.plot(history.history['accuracy'])
 plt.plot(history.history['loss'])
