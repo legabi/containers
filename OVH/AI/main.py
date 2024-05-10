@@ -149,8 +149,8 @@ def data_generator(batch_size):
 
             data = {'inputs': [], 'labels': []}
             for x in df_batch:
-                inputs = tokenizer.encode(x['title'], return_tensors='tf', truncation=True, padding='max_length', max_length=128, add_special_tokens=True)
-                labels = tokenizer.encode(x['complete_text'], return_tensors='tf', truncation=True, padding='max_length', max_length=128, add_special_tokens=True)
+                inputs = tokenizer.encode(x['title'], truncation=True, padding='max_length', max_length=128, add_special_tokens=True)
+                labels = tokenizer.encode(x['complete_text'], truncation=True, padding='max_length', max_length=128, add_special_tokens=True)
                 data['inputs'].append(inputs)
                 data['labels'].append(to_categorical(labels, num_classes=vocab_size))
 
