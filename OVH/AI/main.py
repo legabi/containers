@@ -154,22 +154,22 @@ def data_generator(batch_size):
                 data['inputs'].append(inputs)
                 data['labels'].append(to_categorical(labels, num_classes=vocab_size))
 
-            data['inputs'] = tf.concat(data['inputs'], axis=0)
-            data['labels'] = tf.concat(data['labels'], axis=0)
+            # data['inputs'] = tf.concat(data['inputs'], axis=0)
+            # data['labels'] = tf.concat(data['labels'], axis=0)
 
-            yield data['inputs'], data['labels']
+            # yield data['inputs'], data['labels']
 
-            # ds = Dataset.from_dict(data)
+            ds = Dataset.from_dict(data)
 
-            # tf_ds = ds.to_tf_dataset(
-            #     columns="inputs",
-            #     label_cols="labels",
-            #     batch_size=batch_size,
-            #     shuffle=False,
-            # )
+            tf_ds = ds.to_tf_dataset(
+                columns="inputs",
+                label_cols="labels",
+                batch_size=batch_size,
+                shuffle=False,
+            )
 
-            # for inputs, labels in tf_ds:
-            #     yield inputs, labels
+            for inputs, labels in tf_ds:
+                yield inputs, labels
 
 # Use the data generator for model training
 batch_size = 20
