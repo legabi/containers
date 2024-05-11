@@ -136,6 +136,8 @@ custom_checkpoint = CustomModelCheckpoint(save_freq=500)
 
 df = load_dataset('PleIAs/French-PD-Books', split='train')
 
+tf.compat.v1.enable_eager_execution()
+
 def data_generator(batch_size):
     while True:
         for i in range(0, len(df), batch_size):
