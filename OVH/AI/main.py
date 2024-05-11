@@ -136,8 +136,6 @@ custom_checkpoint = CustomModelCheckpoint(save_freq=500)
 
 df = load_dataset('PleIAs/French-PD-Books', split='train')
 
-tf.compat.v1.enable_eager_execution()
-
 def data_generator(batch_size):
     while True:
         for i in range(0, len(df), batch_size):
@@ -156,20 +154,22 @@ def data_generator(batch_size):
                 data['inputs'].append(inputs)
                 data['labels'].append(to_categorical(labels, num_classes=vocab_size))
 
-            data['inputs'] = tf.concat(data['inputs'], axis=0).numpy()
-            data['labels'] = tf.concat(data['labels'], axis=0).numpy()
+            data['inputs'] = tf.concat(data['inputs'], axis=0)
+            data['labels'] = tf.concat(data['labels'], axis=0)
 
-            ds = Dataset.from_dict(data)
+            yield data['inputs'], data['labels']
 
-            tf_ds = ds.to_tf_dataset(
-                columns="inputs",
-                label_cols="labels",
-                batch_size=batch_size,
-                shuffle=False,
-            )
+            # ds = Dataset.from_dict(data)
 
-            for inputs, labels in tf_ds:
-                yield inputs, labels
+            # tf_ds = ds.to_tf_dataset(
+            #     columns="inputs",
+            #     label_cols="labels",
+            #     batch_size=batch_size,
+            #     shuffle=False,
+            # )
+
+            # for inputs, labels in tf_ds:
+            #     yield inputs, labels
 
 # Use the data generator for model training
 batch_size = 20
