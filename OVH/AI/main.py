@@ -178,7 +178,7 @@ class CustomModelCheckpoint(Callback):
 custom_checkpoint = CustomModelCheckpoint(save_freq=500)
 
 
-df = load_dataset('PleIAs/French-PD-Books', split='train[:16]', num_proc=os.cpu_count())
+df = load_dataset('PleIAs/French-PD-Books', split='train', num_proc=os.cpu_count())
 
 def encode_examples(x):
     inputs = tokenizer.encode(f"user: {x['title']} bot:", truncation=True, padding='max_length', max_length=256, add_special_tokens=True)
