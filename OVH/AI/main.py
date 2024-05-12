@@ -160,7 +160,7 @@ class CustomCallback(Callback):
         plt.close()
 
 
-custom_callback = CustomCallback(batch_interval=10)
+custom_callback = CustomCallback(batch_interval=100)
 
 
 class CustomModelCheckpoint(Callback):
@@ -175,7 +175,7 @@ class CustomModelCheckpoint(Callback):
 
 
 # Instantiate the custom callback
-custom_checkpoint = CustomModelCheckpoint(save_freq=500)
+custom_checkpoint = CustomModelCheckpoint(save_freq=1000)
 
 
 df = load_dataset('PleIAs/French-PD-Books', split='train', num_proc=os.cpu_count())
