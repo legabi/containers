@@ -218,14 +218,13 @@ batch_size = 5
 # history = model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epochs=3, callbacks=[custom_checkpoint])
 # do it with sessions
 # history = model.fit(data_generator(batch_size), steps_per_epoch=len(df) // batch_size, epochs=3, callbacks=[custom_callback, custom_checkpoint])
-config = tf.compat.v1.ConfigProto()
-config.gpu_options.allow_growth = True
-sess = tf.compat.v1.Session(config=config)
+# config = tf.compat.v1.ConfigProto()
+# config.gpu_options.allow_growth = True
+# sess = tf.compat.v1.Session(config=config)
 
-steps_per_epoch = math.ceil(len(df) / batch_size)
+# steps_per_epoch = math.ceil(len(df) / batch_size)
 
-with sess.as_default():
-    history = model.fit(data_generator(batch_size), 
+history = model.fit(data_generator(batch_size), 
                                   steps_per_epoch=math.ceil(len(df) / batch_size),
                                   epochs=3,
                                   verbose=2,
