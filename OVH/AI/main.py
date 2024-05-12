@@ -2,6 +2,8 @@ import sys
 import numpy as np
 import os
 os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
+os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+os.environ["HF_DATASETS_OFFLINE"] = "1"
 import tensorflow as tf
 from datasets import load_dataset, Dataset;
 from transformers import BertTokenizer
@@ -82,8 +84,6 @@ if gpus:
   except RuntimeError as e:
     # Memory growth must be set before GPUs have been initialized
     print(e)
-
-os.environ["HF_DATASETS_OFFLINE"] = "1"
 
 # %% [markdown]
 # # Load datas
