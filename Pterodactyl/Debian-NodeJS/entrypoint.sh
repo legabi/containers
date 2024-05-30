@@ -29,9 +29,9 @@ export TZ
 # Switch to the container's working directory
 cd /home/container || exit 1
 
-# Print PHP version
-printf "\033[1m\033[33mcontainer@pterodactyl~ \033[ php -v\n"
-php -v
+# Print Node version
+printf "\033[1m\033[33mcontainer@pterodactyl~ \033[ node -v\n"
+node -v
 
 # Convert all of the "{{VARIABLE}}" parts of the command into the expected shell
 # variable format of "${VARIABLE}" before evaluating the string and automatically
