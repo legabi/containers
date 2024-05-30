@@ -1,15 +1,15 @@
-name: Images for Pterodactyl PHP
+name: Images for Pterodactyl NodeJS with debian
 
 on:
   push:
     branches: 
       - main
     paths:
-      - Pterodactyl/php/**
+      - Pterodactyl/**
 
 jobs:
   push:
-    name: "Pterodactyl-PHP-${{ matrix.version }}"
+    name: "Pterodactyl-DNJS-${{ matrix.version }}"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -18,8 +18,11 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - 8-0
-          - 8-1
+          - nodejs17
+          - nodejs18
+          - nodejs19
+          - nodejs20
+          - nodejs21
     steps:
       - uses: actions/checkout@v3
       - name: Set up QEMU
@@ -35,9 +38,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./Pterodactyl/php
-          file: ./Pterodactyl/php/${{ matrix.version }}/Dockerfile
+          context: ./Pterodactyl/Debian-NodeJS
+          file: ./Pterodactyl/Debian-NodeJS/${{ matrix.version }}/Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/legabi/containers:pterodactyl-php-${{ matrix.version }}
+            ghcr.io/legabi/containers:pterodactyl-dnjs-${{ matrix.version }}
