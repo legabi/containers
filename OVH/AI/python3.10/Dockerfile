@@ -58,12 +58,13 @@ RUN apt-get -qy update && apt-get install -qy \
 # RUN rm NVIDIA-Linux-x86_64-550.54.15.run
 
 # Copiez le fichier requirements.txt dans le répertoire de travail
-COPY ../requirements.txt /requirements.txt
-COPY ../main.py /main.py
+COPY ../requirements.txt /workspace/requirements.txt
+COPY ../main1.py /workspace/main.py
+RUN wget -O /workspace/BTCUSDT.csv http://82.67.2.190:18068/share/cOnrt0E-vZK6HrtC/BTCUSDT.csv
 
 # Installez les dépendances spécifiées dans requirements.txt
-RUN python3 -m pip install --no-cache-dir -r /requirements.txt
-RUN python3 -m pip install transformers matplotlib tqdm 
+RUN python3 -m pip install --no-cache-dir -r /workspace/requirements.txt
+RUN python3 -m pip install transformers matplotlib tqdm scikit-learn
 # # Nvidia H100
 # RUN python3.10 -m pip uninstall -y tensorflow
 # RUN python3.10 -m pip install tensorflow[and-cuda]
@@ -71,4 +72,4 @@ RUN python3 -m pip install transformers matplotlib tqdm
 # Vérif
 
 # Commande par défaut pour exécuter lorsqu'un conteneur basé sur cette image est démarré
-CMD ["python3", "/main.py"]
+CMD ["python3", "/workspace/main.py"]
