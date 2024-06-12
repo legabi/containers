@@ -14,7 +14,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     gnupg \
     lsb-release \
-    software-properties-common
+    software-properties-common \
+    git \
+    zip
 
 # Téléchargement et ajout de la clé GPG pour le dépôt NodeSource
 RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
