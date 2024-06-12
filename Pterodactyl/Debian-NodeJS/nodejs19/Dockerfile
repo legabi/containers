@@ -1,9 +1,11 @@
-FROM ghcr.io/pterodactyl/installers:debian
+FROM debian:buster-slim
 
 LABEL author="Gabriel BTD (le_gabi)"
 LABEL maintainer="gabriel.btd@agamicloud.tech"
 LABEL org.opencontainers.image.source="https://github.com/legabi/containers"
 LABEL org.opencontainers.image.description="A Docker image to run Node.js 18 on Pterodactyl"
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Mise à jour et installation des dépendances nécessaires pour Node.js
 RUN apt-get update && apt-get install -y \
