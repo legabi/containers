@@ -9,20 +9,27 @@ from sklearn.metrics import mean_squared_error
 import sys
 import matplotlib.pyplot as plt
 import time
+from datasets import Dataset;
 
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
-batch_size = 8196 * 3
+batch_size = 4096
 
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
     try:
         for gpu in gpus:
             tf.config.experimental.set_memory_growth(gpu, True)
+            tf.config.experimental.set_virtual_device_configuration(
+                gpu,
+                [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=1024*4)]
+            )
+
         logical_gpus = tf.config.list_logical_devices('GPU')
         print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
     except RuntimeError as e:
         print(e)
+
 
 def print_step(step, text=None):
     print('\r')
@@ -122,8 +129,15 @@ update_progress_bar_on_bottom(3.5/8*10)
 x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], x_train.shape[2]))
 x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], x_test.shape[2]))
 
+def data_generator(batch_size):
+    while True:
+        for i in range(0, len(x_train), batch_size):
+            yield x_train[i:i+batch_size], y_train[i:i+batch_size]
+
+
 print_step(4, 'Model Compilation and Training')
 update_progress_bar_on_bottom(4/8*10)
+
 model = Sequential()
 model.add(LSTM(100, return_sequences=True, input_shape=(seq_length, x_train.shape[2])))
 model.add(LSTM(100, return_sequences=True))
@@ -131,13 +145,14 @@ model.add(LSTM(100, return_sequences=False))
 model.add(Dense(25))
 model.add(Dense(1))
 update_progress_bar_on_bottom(4.5/8*10)
-
 start = time.time()
 model.compile(optimizer='adam', loss='mean_squared_error', metrics=['accuracy'])
 model.summary()
+
 print_step(5, 'Model Training')
 update_progress_bar_on_bottom(5/8*10)
-history = model.fit(x_train, y_train, batch_size=batch_size, epochs=1, callbacks=[custom_callback, custom_checkpoint], verbose=2)
+steps_per_epoch = len(x_train) // batch_size
+history = model.fit(data_generator(batch_size), epochs=1, callbacks=[custom_callback, custom_checkpoint], verbose=2, steps_per_epoch=steps_per_epoch)
 print(f'Training took {time.time() - start} seconds')
 model.summary()
 
