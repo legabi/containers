@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
     wget
 
 # Téléchargement et ajout de la clé GPG pour le dépôt Sury PHP
-RUN wget -qO - https://packages.sury.org/php/apt.gpg | sudo apt-key add -
+RUN wget -qO - https://packages.sury.org/php/apt.gpg | apt-key add -
 
 # Ajout du dépôt Sury PHP dans sources.list.d
 RUN echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
