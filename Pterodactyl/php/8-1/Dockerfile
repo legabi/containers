@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     gnupg \
     lsb-release \
-    software-properties-common
+    software-properties-common \
+    wget
 
 # Téléchargement et ajout de la clé GPG pour le dépôt Sury PHP
 RUN wget -qO - https://packages.sury.org/php/apt.gpg | sudo apt-key add -
