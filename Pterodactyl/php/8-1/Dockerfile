@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:bookworm-slim
 
 LABEL author="Gabriel BTD (le_gabi)"
 LABEL maintainer="gabriel.btd@agamicloud.tech"
